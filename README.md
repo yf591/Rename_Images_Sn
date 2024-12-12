@@ -21,7 +21,7 @@ A GUI application to rename images in a specified ZIP file with sequential numbe
 ## Installation
 
 ```bash
-git clone https://github.com/your_username/Rename_Images_Sn.git
+git clone https://github.com/yf591/Rename_Images_Sn.git
 cd Rename_Images_Sn
 pip install -r requirements.txt
 ```
