@@ -7,7 +7,7 @@ import os
 import zipfile
 from renamer import rename_images_sequentially
 from zipper import zip_folder
-import shutil
+# import shutil # 削除
 
 def process_zip_file(zip_path, prefix):
     """
