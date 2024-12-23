@@ -1,14 +1,14 @@
 # Rename_Images_Sn
 
-This is a GUI application that renames image files in a specified ZIP file to sequential numbers.
+This is a GUI application that renames image files in a specified folder to sequential numbers.
 
 
 ## Features
 
-*   Extracts images from a ZIP file and renames them with a specified prefix (or the default `file`) and sequential numbers (e.g., `file_0001.jpg`, `image_0002.png`).
-*   **Converts all supported image formats to `.jpg` format before sequential numbering.** (Updated 2024-12-18: Previously only supported `jpg`, `jpeg`, and `png`.)
-*   Creates a new folder named `original_folder_name_Sn` without modifying the original folder and stores the renamed images in it.
-*   Compresses the `original_folder_name_Sn` folder containing the renamed images into a new ZIP file (`original_folder_name_Sn.zip`).
+*   Copies the specified folder and creates a new folder with `_Sn` appended to the end (e.g., `images` → `images_Sn`). (Updated 2024-12-23: Previously processed ZIP files.)
+*   **Renames the images in the new folder (`_Sn` folder) with a specified prefix (or the default `file`) and sequential numbers (e.g., `file_0001.jpg`, `image_0002.png`).** (Updated 2024-12-23: Previously zipped the `_Sn` folder.)
+*   Maintains the original extension for `.png`, `.jpg`, and `.jpeg` images. Other image formats are converted to `.jpg` format. (Updated 2024-12-18: Previously converted all to `.jpg`. Updated 2024-12-23: Now maintains extensions for `.png`, `.jpg`, and `.jpeg`.)
+*   **After processing, only the sequentially numbered image files will remain in the `_Sn` folder. Other files and folders will be deleted.** (Updated 2024-12-23: Added functionality to remove unnecessary files and folders)
 *   Easy to use with a Tkinter-based GUI.
 *   The filename prefix can be freely entered and changed on the GUI. If left blank, the default `file` will be used.
 
@@ -37,9 +37,9 @@ pip install -r requirements.txt
     ```
 
 2. In the displayed GUI, enter an optional prefix in the input field under "Enter prefix for filenames (optional):" (e.g., entering "image" will result in "image_0001.jpg", "image_0002.jpg", ...). Leaving it blank will result in "file_0001.jpg", ...
-3. Click the "Select ZIP File" button.
-4. In the file selection dialog, select the ZIP file you want to process.
-5. The selected ZIP file will be extracted, image files will be renamed, and saved as a new ZIP file. The original folder will not be changed.
+3. Click the "Select Folder" button. (Updated 2024-12-23: Previously "Select ZIP File" button.)
+4. In the file selection dialog, select the folder you want to process.
+5. The selected folder will be copied, image files will be renamed, and a new folder with `_Sn` appended to the end will be created. **Only the sequentially numbered image files will remain in the new folder.**
 
 
 ## Repository Structure
@@ -48,10 +48,9 @@ pip install -r requirements.txt
 Rename_Images_Sn/
 ├── README.md           # English README (this file)
 ├── README-ja.md        # Japanese README
-├── main.py             # Main program (GUI)
-├── renamer.py          # Image renaming function (Updated 2024-12-18: Added image conversion functionality)
-├── zipper.py           # ZIP compression/decompression function
-└── requirements.txt    # Required packages (Updated 2024-12-18: Added Pillow)
+├── main.py             # Main program (GUI) (Updated 2024-12-23: Modified to process folders. Added functionality to remove unnecessary files and folders)
+├── renamer.py          # Image renaming function (Updated 2024-12-23: Modified to maintain extensions for .png, .jpg, .jpeg)
+└── requirements.txt    # Required packages
 ```
 
 
@@ -77,3 +76,9 @@ yf591
     *   Updated `requirements.txt` to add the `Pillow` library required for image conversion.
     *   Deleted `import shutil` in `main.py`
     *   Added annotations for changes and dates to `README.md` and `README-ja.md`.
+* 2024-12-23:
+    *   Updated `main.py` to process folders instead of ZIP files. Removed ZIP file processing.
+    *   Updated `main.py` to add functionality to remove files and folders other than sequentially numbered files in the `_Sn` folder.
+    *   Updated `renamer.py` to maintain extensions for `.png`, `.jpg`, and `.jpeg`.
+    *   Deleted `zipper.py`.
+    *   Updated `README.md` and `README-ja.md` to reflect the changes.

@@ -4,27 +4,20 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 import os
-import zipfile
 from renamer import rename_images_sequentially
-from zipper import zip_folder
-# import shutil # 削除
+import shutil
 
-def process_zip_file(zip_path, prefix):
+def process_folder(original_folder_path, prefix):
     """
-    Unzip the ZIP file, rename images, and re-zip the folder.
+    Process the folder: copy, rename the folder, rename images, and remove unnecessary files.
     """
-    if not zip_path:
+    if not original_folder_path:
         return
 
     try:
-        # Extract the ZIP file
-        with zipfile.ZipFile(zip_path, 'r') as zipf:
-            extract_folder = os.path.splitext(zip_path)[0]
-            zipf.extractall(extract_folder)
-
         # Get the original folder name
-        folder_name = os.path.basename(extract_folder)
-        parent_dir = os.path.dirname(extract_folder)
+        folder_name = os.path.basename(original_folder_path)
+        parent_dir = os.path.dirname(original_folder_path)
 
         # Create a new folder name (a folder with _Sn appended)
         new_folder_name = folder_name + "_Sn"
@@ -40,35 +33,45 @@ def process_zip_file(zip_path, prefix):
                     break
                 count += 1
 
-        # Create a new folder
-        os.makedirs(new_folder_path)
+        # Copy the original folder to the new folder
+        shutil.copytree(original_folder_path, new_folder_path)
 
-        # Rename images sequentially and copy to new folder
-        rename_images_sequentially(extract_folder, new_folder_path, prefix)
+        # Rename images sequentially in the new folder
+        rename_images_sequentially(new_folder_path, new_folder_path, prefix)
 
-        # Compress the renamed folder into a ZIP file
-        new_zip_path = os.path.join(parent_dir, f"{new_folder_name}.zip")
-        zip_folder(new_folder_path, new_zip_path)
+        # Remove unnecessary files and folders in the new folder
+        for item in os.listdir(new_folder_path):
+            item_path = os.path.join(new_folder_path, item)
+            if os.path.isfile(item_path):
+                base, ext = os.path.splitext(item)
+                try:
+                    # Check if the file was renamed (has the format prefix_0001.ext)
+                    int(base.split("_")[-1])
+                except ValueError:
+                    os.remove(item_path)
+                    print(f"Removed file: {item_path}")
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+                print(f"Removed directory: {item_path}")
 
-        messagebox.showinfo("Success", f"Processed and saved as {new_zip_path}")
+        messagebox.showinfo("Success", f"Processed and saved as {new_folder_path}")
 
     except FileNotFoundError:
         messagebox.showerror("Error", "File not found.")
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
-def select_zip_file():
+def select_folder():
     """
-    Open a file dialog to select a ZIP file and then process it.
+    Open a file dialog to select a folder and then process it.
     """
-    file_path = filedialog.askopenfilename(
-        title="Select ZIP file",
-        filetypes=(("ZIP files", "*.zip"), ("all files", "*.*"))
+    folder_path = filedialog.askdirectory(
+        title="Select Folder"
     )
     prefix = prefix_entry.get()
     if not prefix:
         prefix = "file"
-    process_zip_file(file_path, prefix)
+    process_folder(folder_path, prefix)
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -91,7 +94,7 @@ if __name__ == "__main__":
     prefix_entry = tk.Entry(root)
     prefix_entry.pack(pady=(0,10))
 
-    select_button = tk.Button(root, text="Select ZIP File", command=select_zip_file)
+    select_button = tk.Button(root, text="Select Folder", command=select_folder)
     select_button.pack(pady=20)
 
     root.mainloop()
