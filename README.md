@@ -24,6 +24,17 @@ This is a GUI application that renames image files in a specified folder to sequ
 ```bash
 git clone https://github.com/yf591/Rename_Images_Sn.git
 cd Rename_Images_Sn
+
+# Create virtual environment
+# Windows
+python -m venv .venv
+.venv\Scripts\activate
+
+# macOS/Linux
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install required packages
 pip install -r requirements.txt
 ```
 
