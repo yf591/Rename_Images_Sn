@@ -24,6 +24,17 @@
 ```bash
 git clone https://github.com/yf591/Rename_Images_Sn.git
 cd Rename_Images_Sn
+
+# 仮想環境を作成
+# Windows
+python -m venv .venv
+.venv\Scripts\activate
+
+# macOS/Linux
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 必要なパッケージをインストール
 pip install -r requirements.txt
 ```
 
